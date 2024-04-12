@@ -1,6 +1,5 @@
 package ru.yandex.practicum.moviessearch.ui.movies
 
-import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
@@ -14,16 +13,16 @@ import android.widget.ProgressBar
 import android.widget.TextView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.commit
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import ru.yandex.practicum.moviessearch.R
-import ru.yandex.practicum.moviessearch.databinding.FragmentAboutBinding
 import ru.yandex.practicum.moviessearch.databinding.FragmentMoviesBinding
 import ru.yandex.practicum.moviessearch.domain.models.Movie
 import ru.yandex.practicum.moviessearch.presentation.movies.MoviesState
 import ru.yandex.practicum.moviessearch.presentation.movies.MoviesViewModel
-import ru.yandex.practicum.moviessearch.ui.details.DetailsActivity
+import ru.yandex.practicum.moviessearch.ui.details.DetaisFragment
 
 class MoviesFragment : Fragment() {
 
@@ -33,12 +32,19 @@ class MoviesFragment : Fragment() {
 
     private val viewModel by viewModel<MoviesViewModel>()
 
-    private val adapter = MoviesAdapter {
+    private val adapter = MoviesAdapter { movie ->
         if (clickDebounce()) {
-            val intent = Intent(requireContext(), DetailsActivity::class.java)
-            intent.putExtra("poster", it.image)
-            intent.putExtra("id", it.id)
-            startActivity(intent)
+            parentFragmentManager.commit {
+                replace(
+                    R.id.rootFragmentContainerView,
+                    DetaisFragment.newInstance(
+                        movieId = movie.id,
+                        posterUrl = movie.image
+                    ),
+                    DetaisFragment.TAG
+                )
+                addToBackStack(DetaisFragment.TAG)
+            }
         }
     }
 
