@@ -16,8 +16,10 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.commit
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import ru.yandex.practicum.moviessearch.R
+import ru.yandex.practicum.moviessearch.core.navigation.Router
 import ru.yandex.practicum.moviessearch.databinding.FragmentMoviesBinding
 import ru.yandex.practicum.moviessearch.domain.models.Movie
 import ru.yandex.practicum.moviessearch.presentation.movies.MoviesState
@@ -30,21 +32,19 @@ class MoviesFragment : Fragment() {
         private const val CLICK_DEBOUNCE_DELAY = 1000L
     }
 
+    private val router: Router by inject()
+
     private val viewModel by viewModel<MoviesViewModel>()
 
     private val adapter = MoviesAdapter { movie ->
         if (clickDebounce()) {
-            parentFragmentManager.commit {
-                replace(
-                    R.id.rootFragmentContainerView,
-                    DetaisFragment.newInstance(
-                        movieId = movie.id,
-                        posterUrl = movie.image
-                    ),
-                    DetaisFragment.TAG
+
+            router.openFragment(
+                DetaisFragment.newInstance(
+                    movieId = movie.id,
+                    posterUrl = movie.image
                 )
-                addToBackStack(DetaisFragment.TAG)
-            }
+            )
         }
     }
 
