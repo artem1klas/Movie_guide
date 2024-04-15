@@ -36,4 +36,12 @@
         android:name="ru.yandex.practicum.moviessearch.ui.cast.MovieCastFragment"
         android:label="fragment_movies_cast"
         tools:layout="@layout/fragment_movies_cast" />
+    <fragment
+        android:id="@+id/namesFragment"
+        android:name="ru.yandex.practicum.moviessearch.ui.names.NamesFragment"
+        android:label="NamesFragment" />
+    <fragment
+        android:id="@+id/infoFragment"
+        android:name="ru.yandex.practicum.moviessearch.ui.info.InfoFragment"
+        android:label="InfoFragment" />
 </navigation>

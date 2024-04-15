@@ -7,6 +7,7 @@ import ru.yandex.practicum.moviessearch.data.NetworkClient
 import ru.yandex.practicum.moviessearch.data.dto.MovieCastRequest
 import ru.yandex.practicum.moviessearch.data.dto.MovieDetailsRequest
 import ru.yandex.practicum.moviessearch.data.dto.MoviesSearchRequest
+import ru.yandex.practicum.moviessearch.data.dto.NameSearchRequest
 import ru.yandex.practicum.moviessearch.data.dto.Response
 
 class RetrofitNetworkClient(
@@ -19,12 +20,17 @@ class RetrofitNetworkClient(
             return Response().apply { resultCode = -1 }
         }
         // Добавили ещё одну проверку
-        if ((dto !is MoviesSearchRequest) && (dto !is MovieDetailsRequest) && (dto !is MovieCastRequest)) {
+        if ((dto !is MoviesSearchRequest)
+            && (dto !is MovieDetailsRequest)
+            && (dto !is MovieCastRequest)
+            && (dto !is NameSearchRequest)) {
             return Response().apply { resultCode = 400 }
         }
 
+
         // Добавили в выражение when ещё одну ветку
         val response = when (dto) {
+            is NameSearchRequest -> imdbService.searchNames(dto.expression).execute()
             is MoviesSearchRequest -> imdbService.searchMovies(dto.expression).execute()
             is MovieDetailsRequest -> imdbService.getMovieDetails(dto.movieId).execute()
             else -> imdbService.getFullCast((dto as MovieCastRequest).movieId).execute()
