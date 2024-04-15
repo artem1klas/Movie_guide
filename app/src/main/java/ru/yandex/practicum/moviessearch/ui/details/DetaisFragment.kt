@@ -8,6 +8,7 @@ import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import com.google.android.material.tabs.TabLayoutMediator
 import ru.yandex.practicum.moviessearch.R
+import ru.yandex.practicum.moviessearch.databinding.ActivityRootBinding
 import ru.yandex.practicum.moviessearch.databinding.FragmentDetailsBinding
 
 class DetaisFragment : Fragment() {
@@ -16,16 +17,11 @@ class DetaisFragment : Fragment() {
         private const val ARGS_MOVIE_ID = "movie_id"
         private const val ARGS_POSTER_URL = "poster_url"
 
-        const val TAG = "DetailsFragment"
-
-        fun newInstance(movieId: String, posterUrl: String): Fragment {
-            return DetaisFragment().apply {
-                arguments = bundleOf(
-                    ARGS_MOVIE_ID to movieId,
-                    ARGS_POSTER_URL to posterUrl
-                )
-            }
-        }
+        fun createArgs(movieId: String, posterUrl: String): Bundle =
+            bundleOf(
+                ARGS_MOVIE_ID to movieId,
+                ARGS_POSTER_URL to posterUrl
+            )
     }
 
     private lateinit var binding: FragmentDetailsBinding
@@ -46,11 +42,13 @@ class DetaisFragment : Fragment() {
         val poster = requireArguments().getString(ARGS_POSTER_URL) ?: ""
         val movieId = requireArguments().getString(ARGS_MOVIE_ID) ?: ""
 
-        binding.viewPager.adapter = DetailsViewPagerAdapter(childFragmentManager,
-            lifecycle, poster, movieId)
+        binding.viewPager.adapter = DetailsViewPagerAdapter(
+            childFragmentManager,
+            lifecycle, poster, movieId
+        )
 
         tabsMediator = TabLayoutMediator(binding.tabLayout, binding.viewPager) { tab, position ->
-            when(position) {
+            when (position) {
                 0 -> tab.text = getString(R.string.poster)
                 1 -> tab.text = getString(R.string.details)
             }
@@ -62,7 +60,6 @@ class DetaisFragment : Fragment() {
         super.onDestroyView()
         tabsMediator.detach()
     }
-
 
 
 }
